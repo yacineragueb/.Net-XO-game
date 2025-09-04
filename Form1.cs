@@ -13,196 +13,192 @@ namespace Tic_Tac_Toe
 {
     public partial class Form1 : Form
     {
+        enum enPlayer
+        {
+            Player1, Player2
+        }
+        enum enWinner {
+            Player1,
+            Player2,
+            Draw,
+            InProgress
+        };
+        struct stGameStatus
+        {
+            public enWinner Winner;
+            public bool IsGameOver;
+            public int NumberOfPlay;
+        };
+
+         stGameStatus GameStatus;
+        enPlayer PlayerTurn = enPlayer.Player1;
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        string GetCurrentPlayer()
+        void EndGame()
         {
-            if(lblTurn.Tag.ToString() == "Player 1")
+
+            lblTurn.Text = "Game Over";
+            switch (GameStatus.Winner)
             {
-                lblTurn.Tag = "Player 2";
-                return "Player 2";
+
+                case enWinner.Player1:
+
+                    lblWinner.Text = "Player 1";
+                    break;
+
+                case enWinner.Player2:
+
+                    lblWinner.Text = "Player 2";
+                    break;
+
+                default:
+
+                    lblWinner.Text = "Draw";
+                    break;
+
+            }
+
+            MessageBox.Show("GameOver", "GameOver", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+        bool CheckValues(PictureBox pBox1, PictureBox pBox2, PictureBox pBox3)
+        {
+            if (pBox1.Tag.ToString() != "?" && pBox1.Tag.ToString() == pBox2.Tag.ToString() && pBox1.Tag.ToString() == pBox3.Tag.ToString())
+            {
+                pBox1.BackColor = Color.GreenYellow;
+                pBox2.BackColor = Color.GreenYellow;
+                pBox3.BackColor = Color.GreenYellow;
+
+                if (pBox1.Tag.ToString() == "X") {
+                    GameStatus.Winner = enWinner.Player1;
+                    GameStatus.IsGameOver = true;
+                    EndGame();
+                    return true;
+                } else
+                {
+                    GameStatus.Winner = enWinner.Player2;
+                    GameStatus.IsGameOver = true;
+                    EndGame();
+                    return true;
+                }
+
+            }
+
+            GameStatus.Winner = enWinner.InProgress;
+            GameStatus.IsGameOver = false;
+            return false;
+        }
+
+        void CheckWinner()
+        {
+            //checked rows
+            //check Row1
+            if (CheckValues(pictureBox1, pictureBox2, pictureBox3))
+                return;
+
+            //check Row2
+            if (CheckValues(pictureBox4, pictureBox5, pictureBox6))
+                return;
+
+            //check Row3
+            if (CheckValues(pictureBox7, pictureBox8, pictureBox9))
+                return;
+
+            //checked cols
+            //check col1
+            if (CheckValues(pictureBox1, pictureBox4, pictureBox7))
+                return;
+
+            //check col2
+            if (CheckValues(pictureBox2, pictureBox5, pictureBox8))
+                return;
+
+            //check col3
+            if (CheckValues(pictureBox3, pictureBox6, pictureBox9))
+                return;
+
+            //check Diagonal
+
+            //check Diagonal1
+            if (CheckValues(pictureBox1, pictureBox5, pictureBox9))
+                return;
+
+            //check Diagonal2
+            if (CheckValues(pictureBox3, pictureBox5, pictureBox7))
+                return;
+        }
+
+        void CheckDraw()
+        {
+            if (GameStatus.NumberOfPlay == 9 && GameStatus.Winner == enWinner.InProgress)
+            {
+                GameStatus.IsGameOver = true;
+                GameStatus.Winner = enWinner.Draw;
+                EndGame();
+            }
+        }
+
+        void ChangeImage(PictureBox pBox)
+        {
+            if(GameStatus.IsGameOver)
+            {
+                string Winner;
+                switch (GameStatus.Winner)
+                {
+                    case enWinner.Player1:
+                        Winner = "Player 1";
+                        break;
+                    case enWinner.Player2:
+                        Winner = "Player 2";
+                        break;
+                    default:
+                        Winner = "Draw";
+                        break;
+                }
+                string Message = "The Game is over and the winner is: " + Winner + Environment.NewLine + "Restart the game to play again.";
+                MessageBox.Show(Message, "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if(pBox.Tag.ToString() == "?")
+            {
+                switch(PlayerTurn)
+                {
+                    case enPlayer.Player1:
+                        pBox.Tag = "X";
+                        pBox.Image = Resources.X;
+                        PlayerTurn = enPlayer.Player2;
+                        lblTurn.Text = "Player 2";
+                        GameStatus.NumberOfPlay++;
+                        CheckWinner();
+                        CheckDraw();
+                        break;
+
+                    case enPlayer.Player2:
+                        pBox.Tag = "O";
+                        pBox.Image = Resources.O;
+                        PlayerTurn = enPlayer.Player1;
+                        lblTurn.Text = "Player 1";
+                        GameStatus.NumberOfPlay++;
+                        CheckWinner();
+                        CheckDraw();
+                        break;
+                }
             } else
             {
-                lblTurn.Tag = "Player 1";
-                return "Player 1";
+                MessageBox.Show("Wrong Choice", "Worng", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            
         }
 
-        void UpdatePlayer()
+        private void OnPictureClick(object sender, EventArgs e)
         {
-            string CurrentPlayer = GetCurrentPlayer();
-            lblTurn.Text = CurrentPlayer;
-        }
-
-        void UpdateWinner(string Winner)
-        {
-            lblWinner.Text = Winner;
-        }
-
-        void GameOver(string Winner)
-        {
-            if(Winner == "Player 1")
-            {
-                MessageBox.Show("Game Over", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            if (Winner == "Player 2")
-            {
-                MessageBox.Show("Game Over", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            if (Winner == "Draw")
-            {
-                MessageBox.Show("Game Over", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-        }
-
-        string GetTheWinner()
-        {
-            if(lblTurn.Tag.ToString() == "Player 1")
-            {
-                if(pictureBox1.Tag.ToString() == "Player1" && pictureBox2.Tag.ToString() == "Player1" && pictureBox3.Tag.ToString() == "Player1")
-                {
-                    pictureBox1.BackColor = Color.GreenYellow;
-                    pictureBox2.BackColor = Color.GreenYellow;
-                    pictureBox3.BackColor = Color.GreenYellow;
-                    return "Player 1";
-                }
-
-                if (pictureBox4.Tag.ToString() == "Player1" && pictureBox5.Tag.ToString() == "Player1" && pictureBox6.Tag.ToString() == "Player1")
-                {
-                    pictureBox4.BackColor = Color.GreenYellow;
-                    pictureBox5.BackColor = Color.GreenYellow;
-                    pictureBox6.BackColor = Color.GreenYellow;
-                    return "Player 1";
-                }
-
-                if (pictureBox7.Tag.ToString() == "Player1" && pictureBox8.Tag.ToString() == "Player1" && pictureBox9.Tag.ToString() == "Player1")
-                {
-                    pictureBox7.BackColor = Color.GreenYellow;
-                    pictureBox8.BackColor = Color.GreenYellow;
-                    pictureBox9.BackColor = Color.GreenYellow;
-                    return "Player 1";
-                }
-
-                if (pictureBox1.Tag.ToString() == "Player1" && pictureBox4.Tag.ToString() == "Player1" && pictureBox7.Tag.ToString() == "Player1")
-                {
-                    pictureBox1.BackColor = Color.GreenYellow;
-                    pictureBox4.BackColor = Color.GreenYellow;
-                    pictureBox7.BackColor = Color.GreenYellow;
-                    return "Player 1";
-                }
-
-                if (pictureBox2.Tag.ToString() == "Player1" && pictureBox5.Tag.ToString() == "Player1" && pictureBox8.Tag.ToString() == "Player1")
-                {
-                    pictureBox2.BackColor = Color.GreenYellow;
-                    pictureBox5.BackColor = Color.GreenYellow;
-                    pictureBox8.BackColor = Color.GreenYellow;
-                    return "Player 1";
-                }
-
-                if (pictureBox3.Tag.ToString() == "Player1" && pictureBox6.Tag.ToString() == "Player1" && pictureBox9.Tag.ToString() == "Player1")
-                {
-                    pictureBox3.BackColor = Color.GreenYellow;
-                    pictureBox6.BackColor = Color.GreenYellow;
-                    pictureBox9.BackColor = Color.GreenYellow;
-                    return "Player 1";
-                }
-
-                if (pictureBox1.Tag.ToString() == "Player1" && pictureBox5.Tag.ToString() == "Player1" && pictureBox9.Tag.ToString() == "Player1")
-                {
-                    pictureBox1.BackColor = Color.GreenYellow;
-                    pictureBox5.BackColor = Color.GreenYellow;
-                    pictureBox9.BackColor = Color.GreenYellow;
-                    return "Player 1";
-                }
-
-                if (pictureBox3.Tag.ToString() == "Player1" && pictureBox5.Tag.ToString() == "Player1" && pictureBox7.Tag.ToString() == "Player1")
-                {
-                    pictureBox3.BackColor = Color.GreenYellow;
-                    pictureBox5.BackColor = Color.GreenYellow;
-                    pictureBox7.BackColor = Color.GreenYellow;
-                    return "Player 1";
-                }
-            }
-
-            if(lblTurn.Tag.ToString() == "Player 2")
-            {
-                if (pictureBox1.Tag.ToString() == "Player2" && pictureBox2.Tag.ToString() == "Player2" && pictureBox3.Tag.ToString() == "Player2")
-                {
-                    pictureBox1.BackColor = Color.GreenYellow;
-                    pictureBox2.BackColor = Color.GreenYellow;
-                    pictureBox3.BackColor = Color.GreenYellow;
-                    return "Player 2";
-                }
-
-                if (pictureBox4.Tag.ToString() == "Player2" && pictureBox5.Tag.ToString() == "Player2" && pictureBox6.Tag.ToString() == "Player2")
-                {
-                    pictureBox4.BackColor = Color.GreenYellow;
-                    pictureBox5.BackColor = Color.GreenYellow;
-                    pictureBox6.BackColor = Color.GreenYellow;
-                    return "Player 2";
-                }
-
-                if (pictureBox7.Tag.ToString() == "Player2" && pictureBox8.Tag.ToString() == "Player2" && pictureBox9.Tag.ToString() == "Player2")
-                {
-                    pictureBox7.BackColor = Color.GreenYellow;
-                    pictureBox8.BackColor = Color.GreenYellow;
-                    pictureBox9.BackColor = Color.GreenYellow;
-                    return "Player 2";
-                }
-
-                if (pictureBox1.Tag.ToString() == "Player2" && pictureBox4.Tag.ToString() == "Player2" && pictureBox7.Tag.ToString() == "Player2")
-                {
-                    pictureBox1.BackColor = Color.GreenYellow;
-                    pictureBox4.BackColor = Color.GreenYellow;
-                    pictureBox7.BackColor= Color.GreenYellow;
-                    return "Player 2";
-                }
-
-                if (pictureBox2.Tag.ToString() == "Player2" && pictureBox5.Tag.ToString() == "Player2" && pictureBox8.Tag.ToString() == "Player2")
-                {
-                    pictureBox2.BackColor = Color.GreenYellow;
-                    pictureBox5.BackColor = Color.GreenYellow;
-                    pictureBox8.BackColor = Color.GreenYellow;
-                    return "Player 2";
-                }
-
-                if (pictureBox3.Tag.ToString() == "Player2" && pictureBox6.Tag.ToString() == "Player2" && pictureBox9.Tag.ToString() == "Player2")
-                {
-                    pictureBox3.BackColor = Color.GreenYellow;
-                    pictureBox6.BackColor = Color.GreenYellow;
-                    pictureBox9.BackColor = Color.GreenYellow;
-                    return "Player 2";
-                }
-
-                if (pictureBox1.Tag.ToString() == "Player2" && pictureBox5.Tag.ToString() == "Player2" && pictureBox9.Tag.ToString() == "Player2")
-                {
-                    pictureBox1.BackColor = Color.GreenYellow;
-                    pictureBox5.BackColor = Color.GreenYellow;
-                    pictureBox9.BackColor = Color.GreenYellow;
-                    return "Player 2";
-                }
-
-                if (pictureBox3.Tag.ToString() == "Player2" && pictureBox5.Tag.ToString() == "Player2" && pictureBox7.Tag.ToString() == "Player2")
-                {
-                    pictureBox3.BackColor = Color.GreenYellow;
-                    pictureBox5.BackColor = Color.GreenYellow;
-                    pictureBox7.BackColor = Color.GreenYellow;
-                    return "Player 2";
-                }
-            }
-
-            if(pictureBox1.Tag.ToString() != "0" && pictureBox2.Tag.ToString() != "0" && pictureBox3.Tag.ToString() != "0" && pictureBox4.Tag.ToString() != "0" && pictureBox5.Tag.ToString() != "0" && pictureBox6.Tag.ToString() != "0" && pictureBox7.Tag.ToString() != "0" && pictureBox8.Tag.ToString() != "0" && pictureBox9.Tag.ToString() != "0")
-            {
-                return "Draw";
-            }
-
-            return "In Progress";
+            ChangeImage((PictureBox)sender);
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -221,297 +217,31 @@ namespace Tic_Tac_Toe
             e.Graphics.DrawLine(pen, 535, 80, 535, 400);
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        void ResetPictureBox(PictureBox pBox)
         {
-            if (pictureBox1.Tag.ToString() != "Player1" && pictureBox1.Tag.ToString() != "Player2") {
-
-                if (lblTurn.Tag.ToString() == "Player 1")
-                {
-                    pictureBox1.Image = Resources.X;
-                    pictureBox1.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox1.Image = Resources.O;
-                    pictureBox1.Tag = "Player2";
-                }
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            } else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            if (pictureBox2.Tag.ToString() != "Player1" && pictureBox2.Tag.ToString() != "Player2")
-            {
-
-                if (lblTurn.Text == "Player 1")
-                {
-                    pictureBox2.Image = Resources.X;
-                    pictureBox2.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox2.Image = Resources.O;
-                    pictureBox2.Tag = "Player2";
-                }
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            }
-            else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {
-            if (pictureBox3.Tag.ToString() != "Player1" && pictureBox3.Tag.ToString() != "Player2")
-            {
-
-                if (lblTurn.Tag.ToString() == "Player 1")
-                {
-                    pictureBox3.Image = Resources.X;
-                    pictureBox3.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox3.Image = Resources.O;
-                    pictureBox3.Tag = "Player2";
-                }
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            }
-            else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pictureBox4_Click(object sender, EventArgs e)
-        {
-            if (pictureBox4.Tag.ToString() != "Player1" && pictureBox4.Tag.ToString() != "Player2")
-            {
-
-                if (lblTurn.Tag.ToString() == "Player 1")
-                {
-                    pictureBox4.Image = Resources.X;
-                    pictureBox4.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox4.Image = Resources.O;
-                    pictureBox4.Tag = "Player2";
-                }
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            }
-            else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pictureBox5_Click(object sender, EventArgs e)
-        {
-            if (pictureBox5.Tag.ToString() != "Player1" && pictureBox5.Tag.ToString() != "Player2")
-            {
-
-                if (lblTurn.Tag.ToString() == "Player 1")
-                {
-                    pictureBox5.Image = Resources.X;
-                    pictureBox5.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox5.Image = Resources.O;
-                    pictureBox5.Tag = "Player2";
-                }
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            }
-            else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pictureBox6_Click(object sender, EventArgs e)
-        {
-            if (pictureBox6.Tag.ToString() != "Player1" && pictureBox6.Tag.ToString() != "Player2")
-            {
-
-                if (lblTurn.Tag.ToString() == "Player 1")
-                {
-                    pictureBox6.Image = Resources.X;
-                    pictureBox6.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox6.Image = Resources.O;
-                    pictureBox6.Tag = "Player2";
-                }
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            }
-            else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pictureBox7_Click(object sender, EventArgs e)
-        {
-            if (pictureBox7.Tag.ToString() != "Player1" && pictureBox7.Tag.ToString() != "Player2")
-            {
-
-                if (lblTurn.Tag.ToString() == "Player 1")
-                {
-                    pictureBox7.Image = Resources.X;
-                    pictureBox7.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox7.Image = Resources.O;
-                    pictureBox7.Tag = "Player2";
-                }
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            }
-            else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pictureBox8_Click(object sender, EventArgs e)
-        {
-            if (pictureBox8.Tag.ToString() != "Player1" && pictureBox8.Tag.ToString() != "Player2")
-            {
-
-                if (lblTurn.Tag.ToString() == "Player 1")
-                {
-                    pictureBox8.Image = Resources.X;
-                    pictureBox8.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox8.Image = Resources.O;
-                    pictureBox8.Tag = "Player2";
-                }
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            }
-            else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pictureBox9_Click(object sender, EventArgs e)
-        {
-            if (pictureBox9.Tag.ToString() != "Player1" && pictureBox9.Tag.ToString() != "Player2")
-            {
-                if (lblTurn.Tag.ToString() == "Player 1")
-                {
-                    pictureBox9.Image = Resources.X;
-                    pictureBox9.Tag = "Player1";
-                }
-                else
-                {
-                    pictureBox9.Image = Resources.O;
-                    pictureBox9.Tag = "Player2";
-                }
-
-                string Winner = GetTheWinner();
-                UpdateWinner(Winner);
-                GameOver(Winner);
-                UpdatePlayer();
-            }
-            else
-            {
-                MessageBox.Show("Wrong Choice!", "Wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        void PlayGame()
-        {
-            lblTurn.Text = "Player 1";
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            PlayGame();
-        }
-
-        void ResetPlayerTurn()
-        {
-            lblTurn.Text = "Player 1";
-            lblTurn.Tag = "Player 1";
-        }
-
-        void ResetWinner()
-        {
-            lblWinner.Text = "In Progress";
-        }
-
-        void ResetPictures()
-        {
-            pictureBox1.Image = Resources.question_mark_96;
-            pictureBox1.Tag = "0";
-            pictureBox1.BackColor = Color.Black;
-            pictureBox2.Image = Resources.question_mark_96;
-            pictureBox2.Tag = "0";
-            pictureBox2.BackColor = Color.Black;
-            pictureBox3.Image = Resources.question_mark_96;
-            pictureBox3.Tag = "0";
-            pictureBox3.BackColor = Color.Black;
-            pictureBox4.Image = Resources.question_mark_96;
-            pictureBox4.Tag = "0";
-            pictureBox4.BackColor = Color.Black;
-            pictureBox5.Image = Resources.question_mark_96;
-            pictureBox5.Tag = "0";
-            pictureBox5.BackColor = Color.Black;
-            pictureBox6.Image = Resources.question_mark_96;
-            pictureBox6.Tag = "0";
-            pictureBox6.BackColor = Color.Black;
-            pictureBox7.Image = Resources.question_mark_96;
-            pictureBox7.Tag = "0";
-            pictureBox7.BackColor = Color.Black;
-            pictureBox8.Image = Resources.question_mark_96;
-            pictureBox8.Tag = "0";
-            pictureBox8.BackColor = Color.Black;
-            pictureBox9.Image = Resources.question_mark_96;
-            pictureBox9.Tag = "0";
-            pictureBox9.BackColor = Color.Black;
+            pBox.Tag = "?";
+            pBox.BackColor = Color.Transparent;
+            pBox.Image = Resources.question_mark_96;
         }
 
         void RestartGame()
         {
-            ResetPlayerTurn();
-            ResetWinner();
-            ResetPictures();
-        }
+            ResetPictureBox(pictureBox1);
+            ResetPictureBox(pictureBox2);
+            ResetPictureBox(pictureBox3);
+            ResetPictureBox(pictureBox4);
+            ResetPictureBox(pictureBox5);
+            ResetPictureBox(pictureBox6);
+            ResetPictureBox(pictureBox7);
+            ResetPictureBox(pictureBox8);
+            ResetPictureBox(pictureBox9);
 
+            PlayerTurn = enPlayer.Player1;
+            GameStatus.Winner = enWinner.InProgress;
+            GameStatus.NumberOfPlay = 0;
+            GameStatus.IsGameOver = false;
+            lblWinner.Text = "In Progress";
+        }
         private void btnRestartGame_Click(object sender, EventArgs e)
         {
             RestartGame();

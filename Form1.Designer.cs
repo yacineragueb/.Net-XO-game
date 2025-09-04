@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -101,14 +102,14 @@
             // 
             // lblWinner
             // 
-            this.lblWinner.AutoSize = true;
             this.lblWinner.Font = new System.Drawing.Font("OCR A Extended", 14.2F, System.Drawing.FontStyle.Bold);
             this.lblWinner.ForeColor = System.Drawing.Color.Lime;
-            this.lblWinner.Location = new System.Drawing.Point(41, 304);
+            this.lblWinner.Location = new System.Drawing.Point(32, 304);
             this.lblWinner.Name = "lblWinner";
-            this.lblWinner.Size = new System.Drawing.Size(177, 25);
+            this.lblWinner.Size = new System.Drawing.Size(200, 25);
             this.lblWinner.TabIndex = 4;
             this.lblWinner.Text = "In Progress";
+            this.lblWinner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnRestartGame
             // 
@@ -132,8 +133,8 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Tag = "0";
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.pictureBox1.Tag = "?";
+            this.pictureBox1.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // pictureBox2
             // 
@@ -144,8 +145,8 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 7;
             this.pictureBox2.TabStop = false;
-            this.pictureBox2.Tag = "0";
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
+            this.pictureBox2.Tag = "?";
+            this.pictureBox2.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // pictureBox3
             // 
@@ -156,8 +157,8 @@
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 8;
             this.pictureBox3.TabStop = false;
-            this.pictureBox3.Tag = "0";
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+            this.pictureBox3.Tag = "?";
+            this.pictureBox3.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // pictureBox4
             // 
@@ -168,8 +169,8 @@
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox4.TabIndex = 11;
             this.pictureBox4.TabStop = false;
-            this.pictureBox4.Tag = "0";
-            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
+            this.pictureBox4.Tag = "?";
+            this.pictureBox4.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // pictureBox5
             // 
@@ -180,8 +181,8 @@
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox5.TabIndex = 10;
             this.pictureBox5.TabStop = false;
-            this.pictureBox5.Tag = "0";
-            this.pictureBox5.Click += new System.EventHandler(this.pictureBox5_Click);
+            this.pictureBox5.Tag = "?";
+            this.pictureBox5.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // pictureBox6
             // 
@@ -192,8 +193,8 @@
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox6.TabIndex = 9;
             this.pictureBox6.TabStop = false;
-            this.pictureBox6.Tag = "0";
-            this.pictureBox6.Click += new System.EventHandler(this.pictureBox6_Click);
+            this.pictureBox6.Tag = "?";
+            this.pictureBox6.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // pictureBox7
             // 
@@ -204,8 +205,8 @@
             this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox7.TabIndex = 14;
             this.pictureBox7.TabStop = false;
-            this.pictureBox7.Tag = "0";
-            this.pictureBox7.Click += new System.EventHandler(this.pictureBox7_Click);
+            this.pictureBox7.Tag = "?";
+            this.pictureBox7.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // pictureBox8
             // 
@@ -216,8 +217,8 @@
             this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox8.TabIndex = 13;
             this.pictureBox8.TabStop = false;
-            this.pictureBox8.Tag = "0";
-            this.pictureBox8.Click += new System.EventHandler(this.pictureBox8_Click);
+            this.pictureBox8.Tag = "?";
+            this.pictureBox8.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // pictureBox9
             // 
@@ -228,8 +229,8 @@
             this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox9.TabIndex = 12;
             this.pictureBox9.TabStop = false;
-            this.pictureBox9.Tag = "0";
-            this.pictureBox9.Click += new System.EventHandler(this.pictureBox9_Click);
+            this.pictureBox9.Tag = "?";
+            this.pictureBox9.Click += new System.EventHandler(this.OnPictureClick);
             // 
             // Form1
             // 
@@ -252,9 +253,9 @@
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Tic Tac Toe Game";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
